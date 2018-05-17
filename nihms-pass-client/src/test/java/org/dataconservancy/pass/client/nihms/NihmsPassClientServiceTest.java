@@ -131,7 +131,7 @@ public class NihmsPassClientServiceTest {
     
     
     /**
-     * Checks that it findGrantByAwardNumber returns URI when one found
+     * Checks that findGrantByAwardNumber returns URI when one found
      */
     @Test
     public void testFindGrantByAwardNumberHasMatch() throws Exception {
@@ -161,7 +161,35 @@ public class NihmsPassClientServiceTest {
 
     
     /**
-     * Checks that it findPublicationById returns match based on PMID
+     * Checks that findGrantByAwardNumber will try awardNumber with the "0" removed at position 6
+     * if it fails to find one without the space.
+     */
+    @Test
+    public void testFindGrantByAwardNumberHasMatchWithRemoved0() throws Exception {
+        String awardNumWith0 = "R01AB01234";
+        String awardNumWithout0 = "R01AB1234";
+        Grant grant1 = new Grant();
+        grant1.setId(grantId);
+        grant1.setAwardNumber(awardNumWith0);
+        grant1.setStartDate(new DateTime().minusYears(1));
+
+        Set<URI> grantIds = new HashSet<URI>();
+        grantIds.add(grantId);
+        
+        when(mockClient.findAllByAttribute(eq(Grant.class), eq("awardNumber"), eq(awardNumWith0))).thenReturn(new HashSet<URI>());
+        when(mockClient.findAllByAttribute(eq(Grant.class), eq("awardNumber"), eq(awardNumWithout0))).thenReturn(grantIds);
+        when(mockClient.readResource(eq(grantId), eq(Grant.class))).thenReturn(grant1);
+
+        Grant matchedGrant = clientService.findMostRecentGrantByAwardNumber(awardNumWith0);
+        verify(mockClient).findAllByAttribute(eq(Grant.class), eq("awardNumber"), eq(awardNumWith0)); 
+        verify(mockClient).findAllByAttribute(eq(Grant.class), eq("awardNumber"), eq(awardNumWithout0)); 
+        
+        assertEquals(grant1, matchedGrant);        
+    }
+    
+    
+    /**
+     * Checks that findPublicationById returns match based on PMID
      */
     @Test
     public void testFindPublicationByIdPmidMatch() throws Exception {
@@ -174,7 +202,7 @@ public class NihmsPassClientServiceTest {
         when(mockClient.findByAttribute(eq(Publication.class), eq("pmid"), eq(pmid))).thenReturn(publicationId);
         when(mockClient.readResource(eq(publicationId), eq(Publication.class))).thenReturn(publication);
         
-        Publication matchedPublication = clientService.findPublicationById(pmid, doi);
+        Publication matchedPublication = clientService.findPublicationByPmid(pmid);
         
         assertEquals(publication, matchedPublication);         
     }
@@ -195,9 +223,9 @@ public class NihmsPassClientServiceTest {
         when(mockClient.findByAttribute(Publication.class, "doi", doi)).thenReturn(publicationId);
         when(mockClient.readResource(publicationId, Publication.class)).thenReturn(publication);
         
-        Publication matchedPublication = clientService.findPublicationById(pmid, doi);
+        Publication matchedPublication = clientService.findPublicationByDoi(doi, pmid);
         
-        verify(mockClient, times(2)).findByAttribute(eq(Publication.class), any(), any());
+        verify(mockClient).findByAttribute(eq(Publication.class), any(), any());
         assertEquals(publication, matchedPublication);         
     }
 
@@ -211,9 +239,9 @@ public class NihmsPassClientServiceTest {
         when(mockClient.findByAttribute(Publication.class, "pmid", pmid)).thenReturn(null);
         when(mockClient.findByAttribute(Publication.class, "doi", doi)).thenReturn(null);
         
-        Publication matchedPublication = clientService.findPublicationById(pmid, doi);
+        Publication matchedPublication = clientService.findPublicationByPmid(pmid);
         
-        verify(mockClient, times(2)).findByAttribute(eq(Publication.class), Mockito.anyString(), any());
+        verify(mockClient).findByAttribute(eq(Publication.class), Mockito.anyString(), any());
         assertNull(matchedPublication);         
                 
     }  
@@ -255,8 +283,7 @@ public class NihmsPassClientServiceTest {
         
         assertNull(matchedRepoCopy);       
     }
-    
-    
+        
     
     /**
      * Tests the scenario where a match is found right away using publication+grant 
