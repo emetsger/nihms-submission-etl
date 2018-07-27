@@ -6,6 +6,7 @@ The NIHMS Data Harvest CLI uses Selenium with the FireFox drivers to log in and 
 
 ### Pre-requisites
 The following are required to run this tool:
+* Java 8 or later
 * Download the latest nihms-data-harvest-cli-{version}-shaded.jar from the [releases page](https://github.com/OA-PASS/nihms-submission-etl/releases) and place in a folder on the machine where the application will run.
 * Install FireFox (version 55 or later) on the machine that will run the harvester. You do not need to be able to open the browser, the application will run in "headless" mode.
 * Download the [geckodriver](https://github.com/mozilla/geckodriver/releases/tag/v0.20.1) (v0.20.1 has been tested) unzip the folder, locate the geckodriver executable and move it to a convenient location.
@@ -55,6 +56,7 @@ The NIHMS Data Transform-Load CLI reads data in from CSVs that were downloaded f
 
 ### Pre-requisites
 The following is required to run this tool:
+* Java 8 or later
 * Download latest nihms-data-transform-load-cli-{version}-shaded.jar from the [releases page](https://github.com/OA-PASS/nihms-submission-etl/releases) and place in a folder on the machine where the application will run. 
 
 ### Data Transform-Load Configuration
