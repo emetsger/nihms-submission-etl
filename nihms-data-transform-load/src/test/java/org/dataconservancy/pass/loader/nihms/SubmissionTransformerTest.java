@@ -296,7 +296,7 @@ public class SubmissionTransformerTest {
         
         assertEquals(sGrantUri, dto.getSubmission().getGrants().get(0).toString());
         assertEquals(Source.OTHER, dto.getSubmission().getSource());  
-        assertEquals(sUserUri, dto.getSubmission().getUser().toString());
+        assertEquals(sUserUri, dto.getSubmission().getSubmitter().toString());
     }
 
         
@@ -350,7 +350,7 @@ public class SubmissionTransformerTest {
         
         submission.setRepositories(repositories);
         
-        submission.setUser(new URI(sUserUri));        
+        submission.setSubmitter(new URI(sUserUri));        
         
         return submission;
     }

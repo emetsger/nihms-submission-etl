@@ -17,6 +17,7 @@ package org.dataconservancy.pass.loader.nihms;
 
 import java.net.URI;
 
+import org.dataconservancy.pass.client.SubmissionStatusService;
 import org.dataconservancy.pass.client.nihms.NihmsPassClientService;
 import org.dataconservancy.pass.model.Deposit;
 import org.dataconservancy.pass.model.Deposit.DepositStatus;
@@ -109,6 +110,12 @@ public class SubmissionLoader {
             
         }
         
+        //before moving on do one last check to see if SubmissionStatus has been affected by the changes
+        //if so, update status.
+        if (dto.doUpdate()) {
+            SubmissionStatusService statusService = new SubmissionStatusService(submissionUri);
+            statusService.calculateAndUpdateSubmissionStatus();
+        }
     }    
     
 }

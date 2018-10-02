@@ -265,9 +265,9 @@ public class NihmsPassClientService {
     
     
     /**
-     * Searches for Submissions matching a specific publication and User Id
+     * Searches for Submissions matching a specific publication and User Id (Submission.submitter)
      * @param pubId
-     * @param grantId
+     * @param userId
      * @return
      */
     public List<Submission> findSubmissionsByPublicationAndUserId(URI pubId, URI userId) {
@@ -284,7 +284,7 @@ public class NihmsPassClientService {
         
         Map<String,Object> attribs = new HashMap<String,Object>();
         attribs.put("publication", pubId);
-        attribs.put("user", userId);
+        attribs.put("submitter", userId);
         
         Set<URI> uris = client.findAllByAttributes(Submission.class, attribs);
         
@@ -451,7 +451,7 @@ public class NihmsPassClientService {
     public URI createSubmission(Submission submission) {
         URI submissionId = client.createResource(submission);
         LOG.info("New Submission created with URI {}", submissionId);          
-        String key = userIdPubIdKey(submission.getUser(), submission.getPublication());
+        String key = userIdPubIdKey(submission.getSubmitter(), submission.getPublication());
         userPubSubsCache.addToOrCreateEntry(key,submissionId);        
         return submissionId;
     }
@@ -494,7 +494,7 @@ public class NihmsPassClientService {
             client.updateResource(submission);
             
             //shouldnt be necessary, but just to be sure... make sure this is in cache:
-            String key = userIdPubIdKey(submission.getUser(), submission.getPublication());
+            String key = userIdPubIdKey(submission.getSubmitter(), submission.getPublication());
             userPubSubsCache.addToOrCreateEntry(key,submission.getId());
             
             LOG.info("Submission with URI {} was updated ", submission.getId());
