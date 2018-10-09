@@ -290,7 +290,7 @@ public class NihmsPassClientServiceTest {
         verify(mockClient).findAllByAttributes(eq(Submission.class), argumentCaptor.capture());
         
         assertEquals(2, argumentCaptor.getValue().size());
-        assertEquals(userId, argumentCaptor.getValue().get("user"));
+        assertEquals(userId, argumentCaptor.getValue().get("submitter"));
         assertEquals(publicationId, argumentCaptor.getValue().get("publication"));
         
         assertEquals(submission, matchedSubmissions.get(0));
@@ -316,7 +316,7 @@ public class NihmsPassClientServiceTest {
         verify(mockClient).findAllByAttributes(eq(Submission.class), argumentCaptor.capture());
         
         assertEquals(2, argumentCaptor.getValue().size());
-        assertEquals(userId, argumentCaptor.getValue().get("user"));
+        assertEquals(userId, argumentCaptor.getValue().get("submitter"));
         assertEquals(publicationId, argumentCaptor.getValue().get("publication"));
         
         assertTrue(matchedSubmissions.size()==0);
@@ -374,7 +374,7 @@ public class NihmsPassClientServiceTest {
     @Test
     public void testCreateSubmission() {
         Submission submission = new Submission();
-        submission.setUser(userId);
+        submission.setSubmitter(userId);
         submission.setPublication(publicationId);
         
         when(mockClient.createResource(eq(submission))).thenReturn(submissionId);
@@ -394,14 +394,14 @@ public class NihmsPassClientServiceTest {
     public void testUpdateSubmissionHasChanges() {
         Submission submission = new Submission();
         submission.setId(submissionId);
-        submission.setUser(userId);
+        submission.setSubmitter(userId);
         submission.setPublication(publicationId);
         submission.setSubmitted(false);
 
         //make a submission that is different
         Submission submissionEdited = new Submission();
         submissionEdited.setId(submissionId);
-        submissionEdited.setUser(userId);
+        submissionEdited.setSubmitter(userId);
         submissionEdited.setPublication(publicationId);
         submissionEdited.setSubmitted(true);
         

@@ -4,7 +4,7 @@
 
   <groupId>org.dataconservancy.pass</groupId>
   <artifactId>pass-nihms-submission-etl</artifactId>
-  <version>1.2.4</version>
+  <version>1.3.0</version>
   <packaging>pom</packaging>
 
   <name>PASS NIHMS Submission Extract-Transform-Load</name>
@@ -29,7 +29,7 @@
     <org-json.version>20180130</org-json.version>
     <commons-csv.version>1.5</commons-csv.version>
     <slf4j.version>1.7.25</slf4j.version>
-    <pass-client.version>0.3.3-SNAPSHOT</pass-client.version>
+    <pass-client.version>0.4.1-SNAPSHOT</pass-client.version>
     <logback.version>1.2.3</logback.version>
     <selenium.version>3.11.0</selenium.version>
     <args4j.version>2.33</args4j.version>
@@ -156,6 +156,12 @@
       <dependency>
         <groupId>org.dataconservancy.pass</groupId>
         <artifactId>pass-model-nihms</artifactId>
+        <version>${pass-client.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.dataconservancy.pass</groupId>
+        <artifactId>pass-status-service</artifactId>
         <version>${pass-client.version}</version>
       </dependency>
       

@@ -83,7 +83,7 @@ public class SubmissionLoaderTest {
         
         Submission submission = new Submission();
         submission.setPublication(new URI(sPublicationUri));
-        submission.setUser(new URI(sUserUri));
+        submission.setSubmitter(new URI(sUserUri));
 
         SubmissionDTO dto = new SubmissionDTO();
         dto.setPublication(publication);
@@ -128,7 +128,7 @@ public class SubmissionLoaderTest {
         publication.setPmid(pmid);
         
         Submission submission = new Submission();
-        submission.setUser(new URI(sUserUri));
+        submission.setSubmitter(new URI(sUserUri));
         submission.setPublication(publication.getId());
 
         SubmissionDTO dto = new SubmissionDTO();
@@ -170,7 +170,7 @@ public class SubmissionLoaderTest {
         Submission submission = new Submission();
         submission.setId(new URI(sSubmissionUri));
         submission.setPublication(new URI(sPublicationUri));
-        submission.setUser(new URI(sUserUri));
+        submission.setSubmitter(new URI(sUserUri));
 
         SubmissionDTO dto = new SubmissionDTO();
         dto.setPublication(publication);
@@ -204,7 +204,7 @@ public class SubmissionLoaderTest {
         
         Submission submission = new Submission();
         submission.setPublication(publication.getId());
-        submission.setUser(new URI(sUserUri));
+        submission.setSubmitter(new URI(sUserUri));
         
         RepositoryCopy repositoryCopy = new RepositoryCopy();
         repositoryCopy.setPublication(publication.getId());
@@ -258,7 +258,7 @@ public class SubmissionLoaderTest {
         Submission submission = new Submission();
         submission.setId(new URI(sSubmissionUri));
         submission.setPublication(publication.getId());
-        submission.setUser(new URI(sUserUri));
+        submission.setSubmitter(new URI(sUserUri));
         
         RepositoryCopy repositoryCopy = new RepositoryCopy();
         repositoryCopy.setPublication(publication.getId());

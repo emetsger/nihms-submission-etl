@@ -18,6 +18,7 @@ package org.dataconservancy.pass.loader.nihms;
 import java.net.URI;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,9 +34,11 @@ import org.dataconservancy.pass.model.RepositoryCopy;
 import org.dataconservancy.pass.model.RepositoryCopy.CopyStatus;
 import org.dataconservancy.pass.model.Submission;
 import org.dataconservancy.pass.model.Submission.Source;
+import org.dataconservancy.pass.model.Submission.SubmissionStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.dataconservancy.pass.client.util.SubmissionStatusCalculator.calculatePostSubmissionStatus;
 import static org.dataconservancy.pass.loader.nihms.util.ProcessingUtil.formatDate;
 import static org.dataconservancy.pass.loader.nihms.util.ProcessingUtil.nullOrEmpty;
 
@@ -140,7 +143,7 @@ public class NihmsPublicationToSubmission {
         RepositoryCopy repoCopy = retrieveOrCreateRepositoryCopy(pub, publication.getId());
         submissionDTO.setRepositoryCopy(repoCopy);
 
-        Submission submission = retrieveOrCreateSubmission(publication.getId(), grant, (repoCopy!=null), pub.getNihmsStatus(), pub.getFileDepositedDate());
+        Submission submission = retrieveOrCreateSubmission(publication.getId(), grant, repoCopy, pub.getNihmsStatus(), pub.getFileDepositedDate());
         submissionDTO.setSubmission(submission);
         
         return submissionDTO;
@@ -314,7 +317,8 @@ public class NihmsPublicationToSubmission {
     //
     //****************************************************
     
-    private Submission retrieveOrCreateSubmission(URI publicationUri, Grant grant, boolean hasRepoCopy, NihmsStatus nihmsStatus, String depositedDate) {
+    private Submission retrieveOrCreateSubmission(URI publicationUri, Grant grant, RepositoryCopy repoCopy, NihmsStatus nihmsStatus, String depositedDate) {
+        boolean hasRepoCopy = repoCopy!=null;
         Submission submission = null;
         URI grantId = grant.getId();
 
@@ -372,6 +376,13 @@ public class NihmsPublicationToSubmission {
             }
             submissionDTO.setUpdateSubmission(true);   
         }
+        
+        if (submission.getRepositories().size()==1 && hasRepoCopy) {
+            //if there is only one repo, can calculate status here, will be checked again later using database
+            SubmissionStatus newStatus = calculatePostSubmissionStatus(submission.getRepositories(), null, Arrays.asList(repoCopy));
+            submission.setSubmissionStatus(newStatus);
+            submissionDTO.setUpdateSubmission(true); 
+        }
 
         // finally, make sure grant is in the list of the chosen submission
         List<URI> grants = submission.getGrants();
@@ -401,8 +412,9 @@ public class NihmsPublicationToSubmission {
         submission.setSource(Source.OTHER);
         submission.setAggregatedDepositStatus(null);
         submission.setSubmitted(false); // false by default, changes to true if there is a repoCopy
-
-        submission.setUser(grant.getPi());
+        submission.setSubmissionStatus(SubmissionStatus.MANUSCRIPT_REQUIRED); //manuscript-required by default, will change later if needed
+        
+        submission.setSubmitter(grant.getPi());
                 
         return submission;
     }

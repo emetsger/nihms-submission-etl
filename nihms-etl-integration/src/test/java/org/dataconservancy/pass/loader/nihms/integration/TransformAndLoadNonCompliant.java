@@ -36,6 +36,7 @@ import org.dataconservancy.pass.model.RepositoryCopy;
 import org.dataconservancy.pass.model.RepositoryCopy.CopyStatus;
 import org.dataconservancy.pass.model.Submission;
 import org.dataconservancy.pass.model.Submission.Source;
+import org.dataconservancy.pass.model.Submission.SubmissionStatus;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.assertEquals;
@@ -71,7 +72,7 @@ public class TransformAndLoadNonCompliant extends NihmsSubmissionEtlITBase {
     }
         
     /**
-     * Tests when the publication is completely new and is compliant
+     * Tests when the publication is completely new and is non-compliant
      * publication, submission but no RepositoryCopy is created
      * @throws Exception
      */
@@ -121,8 +122,9 @@ public class TransformAndLoadNonCompliant extends NihmsSubmissionEtlITBase {
         assertEquals(1, submission.getRepositories().size());
         assertEquals(Source.OTHER, submission.getSource());
         assertFalse(submission.getSubmitted());
-        assertEquals(user1, submission.getUser().toString());
+        assertEquals(user1, submission.getSubmitter().toString());
         assertEquals(null, submission.getSubmittedDate());
+        assertEquals(SubmissionStatus.MANUSCRIPT_REQUIRED, submission.getSubmissionStatus());
 
         repocopyUri = client.findByAttribute(RepositoryCopy.class, "publication", pubUri);
         assertNull(repocopyUri);
@@ -146,7 +148,7 @@ public class TransformAndLoadNonCompliant extends NihmsSubmissionEtlITBase {
         pubUri = client.createResource(publication);
         
         //a submission existed but had no repocopy
-        Submission preexistingSub = newSubmission1(grantUri1);
+        Submission preexistingSub = newSubmission1(grantUri1, true, SubmissionStatus.SUBMITTED);
         preexistingSub.setSubmitted(true);
         preexistingSub.setSource(Source.PASS);
         preexistingSub = client.createAndReadResource(preexistingSub, Submission.class);
@@ -178,6 +180,7 @@ public class TransformAndLoadNonCompliant extends NihmsSubmissionEtlITBase {
         });
         
         Submission reloadedPreexistingSub = client.readResource(preexistingSub.getId(), Submission.class);
+        preexistingSub.setSubmissionStatus(SubmissionStatus.NEEDS_ATTENTION);
         assertEquals(preexistingSub, reloadedPreexistingSub); //should not have been affected
 
         //we should have ONLY ONE submission for this pmid
@@ -220,7 +223,7 @@ public class TransformAndLoadNonCompliant extends NihmsSubmissionEtlITBase {
         pubUri = client.createResource(publication);
         
         //a submission existed for the user/pub combo and is unsubmitted, but has a different grant/repo
-        Submission preexistingSub = newSubmission1(grantUri1);
+        Submission preexistingSub = newSubmission1(grantUri1, false, SubmissionStatus.MANUSCRIPT_REQUIRED);
         preexistingSub.setSubmitted(false);
         preexistingSub.setSource(Source.PASS);
         List<URI> grants = new ArrayList<URI>();
@@ -258,6 +261,7 @@ public class TransformAndLoadNonCompliant extends NihmsSubmissionEtlITBase {
         assertTrue(reloadedPreexistingSub.getGrants().contains(grantUri1));
         assertTrue(reloadedPreexistingSub.getGrants().contains(grantUri2));
         assertEquals(2, reloadedPreexistingSub.getGrants().size());
+        assertEquals(SubmissionStatus.MANUSCRIPT_REQUIRED, reloadedPreexistingSub.getSubmissionStatus());
 
         //we should have ONLY ONE submission for this pmid
         assertEquals(1, client.findAllByAttribute(Submission.class, "publication", pubUri).size());
@@ -288,15 +292,16 @@ public class TransformAndLoadNonCompliant extends NihmsSubmissionEtlITBase {
         return publication;
     }
     
-    private Submission newSubmission1(URI grantUri1) throws Exception {
+    private Submission newSubmission1(URI grantUri1, boolean submitted, SubmissionStatus status) throws Exception {
         Submission submission1 = new Submission();
         List<URI> grants = new ArrayList<URI>();
         grants.add(grantUri1);
         submission1.setGrants(grants);
         submission1.setPublication(pubUri);
-        submission1.setUser(new URI(user1));
+        submission1.setSubmitter(new URI(user1));
         submission1.setSource(Source.OTHER);
-        submission1.setSubmitted(false);
+        submission1.setSubmitted(submitted);
+        submission1.setSubmissionStatus(status);
         List<URI> repos = new ArrayList<URI>();
         repos.add(ConfigUtil.getNihmsRepositoryUri());
         submission1.setRepositories(repos);

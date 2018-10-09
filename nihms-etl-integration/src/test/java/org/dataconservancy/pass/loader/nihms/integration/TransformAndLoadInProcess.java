@@ -36,6 +36,7 @@ import org.dataconservancy.pass.model.RepositoryCopy;
 import org.dataconservancy.pass.model.RepositoryCopy.CopyStatus;
 import org.dataconservancy.pass.model.Submission;
 import org.dataconservancy.pass.model.Submission.Source;
+import org.dataconservancy.pass.model.Submission.SubmissionStatus;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.assertEquals;
@@ -118,19 +119,16 @@ public class TransformAndLoadInProcess extends NihmsSubmissionEtlITBase {
         assertEquals(1, submission.getRepositories().size());
         assertEquals(Source.OTHER, submission.getSource());
         assertTrue(submission.getSubmitted());
-        assertEquals(user1, submission.getUser().toString());
+        assertEquals(user1, submission.getSubmitter().toString());
         assertEquals(12, submission.getSubmittedDate().getMonthOfYear());
         assertEquals(12, submission.getSubmittedDate().getDayOfMonth());
         assertEquals(2017, submission.getSubmittedDate().getYear());
+        assertEquals(SubmissionStatus.SUBMITTED, submission.getSubmissionStatus());
 
         repocopyUri = client.findByAttribute(RepositoryCopy.class, "publication", pubUri);
         RepositoryCopy repoCopy = client.readResource(repocopyUri, RepositoryCopy.class);
         //check fields in repoCopy
-        assertEquals(CopyStatus.IN_PROGRESS, repoCopy.getCopyStatus());
-        assertTrue(repoCopy.getExternalIds().contains(pub.getNihmsId()));
-        assertEquals(1, repoCopy.getExternalIds().size());
-        assertEquals(ConfigUtil.getNihmsRepositoryUri(), repoCopy.getRepository());
-        assertTrue(repoCopy.getAccessUrl().toString().contains(pub.getPmcId()));
+        validateRepositoryCopy(repoCopy);
     }
     
     /**
@@ -151,7 +149,7 @@ public class TransformAndLoadInProcess extends NihmsSubmissionEtlITBase {
         pubUri = client.createResource(publication);
         
         //a submission existed but had no repocopy
-        Submission preexistingSub = client.createAndReadResource(newSubmission1(grantUri1), Submission.class);
+        Submission preexistingSub = client.createAndReadResource(newSubmission1(grantUri1, true, SubmissionStatus.SUBMITTED), Submission.class);
         
         Deposit preexistingDeposit = new Deposit();
         preexistingDeposit.setDepositStatus(DepositStatus.SUBMITTED);
@@ -215,15 +213,16 @@ public class TransformAndLoadInProcess extends NihmsSubmissionEtlITBase {
         return publication;
     }
     
-    private Submission newSubmission1(URI grantUri1) throws Exception {
+    private Submission newSubmission1(URI grantUri1, boolean submitted, SubmissionStatus status) throws Exception {
         Submission submission1 = new Submission();
         List<URI> grants = new ArrayList<URI>();
         grants.add(grantUri1);
         submission1.setGrants(grants);
         submission1.setPublication(pubUri);
-        submission1.setUser(new URI(user1));
+        submission1.setSubmitter(new URI(user1));
         submission1.setSource(Source.PASS);
-        submission1.setSubmitted(true);
+        submission1.setSubmitted(submitted);
+        submission1.setSubmissionStatus(status);
         List<URI> repos = new ArrayList<URI>();
         repos.add(ConfigUtil.getNihmsRepositoryUri());
         submission1.setRepositories(repos);
@@ -239,7 +238,5 @@ public class TransformAndLoadInProcess extends NihmsSubmissionEtlITBase {
         assertEquals(CopyStatus.IN_PROGRESS, repoCopy.getCopyStatus());
         assertNull(repoCopy.getAccessUrl());
     }
-    
-    
-    
+        
 }
