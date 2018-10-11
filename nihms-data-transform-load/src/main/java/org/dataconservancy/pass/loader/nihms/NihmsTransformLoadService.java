@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import org.dataconservancy.pass.client.SubmissionStatusService;
 import org.dataconservancy.pass.client.fedora.UpdateConflictException;
 import org.dataconservancy.pass.client.nihms.NihmsPassClientService;
 import org.dataconservancy.pass.entrez.PmidLookup;
@@ -51,6 +52,7 @@ public class NihmsTransformLoadService {
     
     private static CompletedPublicationsCache completedPubsCache;
    
+    private SubmissionStatusService statusService;
     
     public NihmsTransformLoadService() {
         nihmsPassClient = new NihmsPassClientService();
@@ -63,9 +65,11 @@ public class NihmsTransformLoadService {
      * @param passClientService
      * @param pmidLookup
      */
-    public NihmsTransformLoadService(NihmsPassClientService passClientService, PmidLookup pmidLookup) {
+    public NihmsTransformLoadService(NihmsPassClientService passClientService, PmidLookup pmidLookup, 
+                                     SubmissionStatusService statusService) {
         this.nihmsPassClient=passClientService;
         this.pmidLookup=pmidLookup;
+        this.statusService=statusService;
         completedPubsCache = CompletedPublicationsCache.getInstance();
     }
     
@@ -131,7 +135,7 @@ public class NihmsTransformLoadService {
                 NihmsPublicationToSubmission transformer = new NihmsPublicationToSubmission(nihmsPassClient, pmidLookup);
                 SubmissionDTO transformedRecord = transformer.transform(pub);
                 if (transformedRecord.doUpdate()) {
-                    SubmissionLoader loader = new SubmissionLoader(nihmsPassClient);
+                    SubmissionLoader loader = new SubmissionLoader(nihmsPassClient, statusService);
                     loader.load(transformedRecord);                      
                 } else {
                     LOG.info("No update required for PMID {} with award number {}", pub.getPmid(), pub.getGrantNumber());

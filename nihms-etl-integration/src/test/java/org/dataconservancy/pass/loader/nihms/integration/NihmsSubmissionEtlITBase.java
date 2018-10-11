@@ -33,6 +33,7 @@ import org.junit.Before;
 
 import org.dataconservancy.pass.client.PassClient;
 import org.dataconservancy.pass.client.PassClientFactory;
+import org.dataconservancy.pass.client.SubmissionStatusService;
 import org.dataconservancy.pass.client.nihms.NihmsPassClientService;
 import org.dataconservancy.pass.entrez.PmidLookup;
 import org.dataconservancy.pass.entrez.PubMedEntrezRecord;
@@ -70,6 +71,10 @@ public abstract class NihmsSubmissionEtlITBase {
 
     protected final PassClient client = PassClientFactory.getPassClient();
     
+    protected final SubmissionStatusService statusService = new SubmissionStatusService(client);
+    
+    protected final NihmsPassClientService nihmsPassClientService = new NihmsPassClientService(client);
+    
     protected static String path = TransformAndLoadSmokeIT.class.getClassLoader().getResource("data").getPath();
     
     static {
@@ -103,8 +108,7 @@ public abstract class NihmsSubmissionEtlITBase {
     public void cleanup() {
         completedPubsCache.clear();
         
-        NihmsPassClientService nihmsClient = new NihmsPassClientService();
-        nihmsClient.clearCache();
+        nihmsPassClientService.clearCache();
         
         //clean out all data from the following (note Grant URIs added to createdUris the createGrant() method as we don't want to delete pre-loaded data)
         putAllInCreatedUris(client.findAllByAttribute(Submission.class, "@type", "Submission"), Submission.class);

@@ -23,7 +23,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.dataconservancy.pass.client.nihms.NihmsPassClientService;
 import org.dataconservancy.pass.loader.nihms.NihmsTransformLoadService;
 import org.dataconservancy.pass.loader.nihms.model.NihmsPublication;
 import org.dataconservancy.pass.loader.nihms.model.NihmsStatus;
@@ -92,7 +91,7 @@ public class TransformAndLoadNonCompliant extends NihmsSubmissionEtlITBase {
 
         //load all new publication, repo copy and submission
         NihmsPublication pub = newNonCompliantNihmsPub();
-        NihmsTransformLoadService transformLoadService = new NihmsTransformLoadService(new NihmsPassClientService(), mockPmidLookup);
+        NihmsTransformLoadService transformLoadService = new NihmsTransformLoadService(nihmsPassClientService, mockPmidLookup, statusService);
         transformLoadService.transformAndLoadNihmsPub(pub);
         
         //now make sure we wait for submission, should only be one from the test
@@ -169,7 +168,7 @@ public class TransformAndLoadNonCompliant extends NihmsSubmissionEtlITBase {
         //now we have an existing publication, deposit, and submission for same grant/repo... 
         //do transform/load to make sure we get a stalled repocopy and the deposit record is updated
         NihmsPublication pub = newNonCompliantStalledNihmsPub();
-        NihmsTransformLoadService transformLoadService = new NihmsTransformLoadService(new NihmsPassClientService(), mockPmidLookup);
+        NihmsTransformLoadService transformLoadService = new NihmsTransformLoadService(nihmsPassClientService, mockPmidLookup, statusService);
         transformLoadService.transformAndLoadNihmsPub(pub);
 
         //make sure we wait for submission, should only be one from the test
@@ -244,7 +243,7 @@ public class TransformAndLoadNonCompliant extends NihmsSubmissionEtlITBase {
         //now we have an existing publication, submission for same user/publication... 
         //do transform/load to make sure we get an updated submission that includes grant/repo
         NihmsPublication pub = newNonCompliantNihmsPub();
-        NihmsTransformLoadService transformLoadService = new NihmsTransformLoadService(new NihmsPassClientService(), mockPmidLookup);
+        NihmsTransformLoadService transformLoadService = new NihmsTransformLoadService(nihmsPassClientService, mockPmidLookup, statusService);
         transformLoadService.transformAndLoadNihmsPub(pub);
 
         //make sure we wait for submission, should only be one from the test

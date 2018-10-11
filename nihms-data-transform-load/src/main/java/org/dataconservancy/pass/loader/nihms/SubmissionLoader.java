@@ -36,6 +36,8 @@ public class SubmissionLoader {
     private static final Logger LOG = LoggerFactory.getLogger(SubmissionLoader.class);
     
     private NihmsPassClientService clientService;
+    
+    private SubmissionStatusService statusService;
         
 
     /**
@@ -43,14 +45,17 @@ public class SubmissionLoader {
      */
     public SubmissionLoader() {
         this.clientService = new NihmsPassClientService();
+        this.statusService = new SubmissionStatusService();
     }
     
     /**
      * Supports initiation with specific client service
      * @param clientService
+     * @param statusService
      */
-    public SubmissionLoader(NihmsPassClientService clientService) {
+    public SubmissionLoader(NihmsPassClientService clientService, SubmissionStatusService statusService) {
         this.clientService = clientService;
+        this.statusService = statusService;
     }
     
  
@@ -113,8 +118,7 @@ public class SubmissionLoader {
         //before moving on do one last check to see if SubmissionStatus has been affected by the changes
         //if so, update status.
         if (dto.doUpdate()) {
-            SubmissionStatusService statusService = new SubmissionStatusService(submissionUri);
-            statusService.calculateAndUpdateSubmissionStatus();
+            statusService.calculateAndUpdateSubmissionStatus(submissionUri);
         }
     }    
     
