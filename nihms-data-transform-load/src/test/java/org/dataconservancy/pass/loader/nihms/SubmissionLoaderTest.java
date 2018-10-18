@@ -22,6 +22,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import org.dataconservancy.pass.client.SubmissionStatusService;
 import org.dataconservancy.pass.client.nihms.NihmsPassClientService;
 import org.dataconservancy.pass.loader.nihms.util.ConfigUtil;
 import org.dataconservancy.pass.model.Deposit;
@@ -53,6 +54,9 @@ public class SubmissionLoaderTest {
     @Mock
     private NihmsPassClientService clientServiceMock;
     
+    @Mock
+    private SubmissionStatusService statusServiceMock;
+    
     private static final String sSubmissionUri = "https://example.com/fedora/submissions/1";
     private static final String sRepositoryCopyUri = "https://example.com/fedora/repositoryCopies/1";
     private static final String sDepositUri = "https://example.com/fedora/deposits/1";
@@ -75,7 +79,7 @@ public class SubmissionLoaderTest {
      */
     @Test
     public void testLoadNewPubNewSubmissionNoRepositoryCopy() throws Exception {
-        SubmissionLoader loader = new SubmissionLoader(clientServiceMock);
+        SubmissionLoader loader = new SubmissionLoader(clientServiceMock, statusServiceMock);
         
         Publication publication = new Publication();
         publication.setTitle(title);
@@ -120,7 +124,7 @@ public class SubmissionLoaderTest {
      */
     @Test
     public void testLoadExistingPubNewSubmissionNoRepositoryCopy() throws Exception {
-        SubmissionLoader loader = new SubmissionLoader(clientServiceMock);
+        SubmissionLoader loader = new SubmissionLoader(clientServiceMock, statusServiceMock);
         
         Publication publication = new Publication();
         publication.setId(new URI(sPublicationUri));
@@ -176,7 +180,7 @@ public class SubmissionLoaderTest {
         dto.setPublication(publication);
         dto.setSubmission(submission);
                 
-        SubmissionLoader loader = new SubmissionLoader(clientServiceMock);
+        SubmissionLoader loader = new SubmissionLoader(clientServiceMock, statusServiceMock);
         
         loader.load(dto);
         
@@ -216,7 +220,7 @@ public class SubmissionLoaderTest {
         dto.setSubmission(submission);
         dto.setRepositoryCopy(repositoryCopy);
         
-        SubmissionLoader loader = new SubmissionLoader(clientServiceMock);
+        SubmissionLoader loader = new SubmissionLoader(clientServiceMock, statusServiceMock);
 
         URI submissionUri = new URI(sSubmissionUri);
         URI repositoryCopyUri = new URI(sRepositoryCopyUri);
@@ -275,7 +279,7 @@ public class SubmissionLoaderTest {
         dto.setSubmission(submission);
         dto.setRepositoryCopy(repositoryCopy);
         
-        SubmissionLoader loader = new SubmissionLoader(clientServiceMock);
+        SubmissionLoader loader = new SubmissionLoader(clientServiceMock, statusServiceMock);
 
         URI repositoryCopyUri = new URI(sRepositoryCopyUri);
         when(clientServiceMock.createRepositoryCopy(repositoryCopy)).thenReturn(repositoryCopyUri);
@@ -306,7 +310,7 @@ public class SubmissionLoaderTest {
      */
     @Test
     public void testLoadThrowExceptionWhenNullDTO() {
-        SubmissionLoader loader = new SubmissionLoader(clientServiceMock);
+        SubmissionLoader loader = new SubmissionLoader(clientServiceMock, statusServiceMock);
         
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("A null Submission object was passed to the loader.");
@@ -322,7 +326,7 @@ public class SubmissionLoaderTest {
      */
     @Test
     public void testLoadThrowExceptionWhenNoSubmission() {
-        SubmissionLoader loader = new SubmissionLoader(clientServiceMock);
+        SubmissionLoader loader = new SubmissionLoader(clientServiceMock, statusServiceMock);
         
         expectedEx.expect(RuntimeException.class);
         expectedEx.expectMessage("A null Submission object was passed to the loader.");
