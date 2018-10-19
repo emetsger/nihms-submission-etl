@@ -85,6 +85,21 @@ public class NihmsHarvesterApp {
                     + "To use a config file, create a file named \"{}\" in the app's folder or provide a valid path "
                     + "using the \"{}\" environment variable.", configFile.getAbsolutePath(), DEFAULT_CONFIG_FILENAME, NIHMS_CONFIG_FILEPATH_PROPKEY);
         }
+
+        if (LOG.isDebugEnabled()) {
+            StringBuilder props = new StringBuilder("\n"
+                        + "--------------------------------------------------------------\n"
+                        + "*                         PROPERTIES                         *\n"
+                        + "--------------------------------------------------------------\n");
+            
+            props.append(NIHMS_CONFIG_FILEPATH_PROPKEY + ": " + configFile.toString());
+            
+            for (String key : SYSTEM_PROPERTIES) {
+                props.append(key + ": " + ConfigUtil.getSystemProperty(key, "{uses_default}"));
+            }
+            props.append("--------------------------------------------------------------\n");
+            LOG.debug(props.toString());
+        }
         
         NihmsHarvester harvester = new NihmsHarvester();
         harvester.harvest(statusesToProcess, startDate);        

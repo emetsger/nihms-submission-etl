@@ -46,8 +46,9 @@ public class NihmsTransformLoadApp {
      */
     private static final String[] SYSTEM_PROPERTIES = {"pass.fedora.user", "pass.fedora.password", 
                                                        "pass.fedora.baseurl", "pass.elasticsearch.url",
-                                                       "pass.elasticsearch.limit","nihmsetl.repository.uri",
-                                                       "nihmsetl.pmcurl.template", "nihmsetl.loader.cachepath"};
+                                                       "pass.elasticsearch.limit", "nihmsetl.data.dir",
+                                                       "nihmsetl.repository.uri", "nihmsetl.pmcurl.template", 
+                                                       "nihmsetl.loader.cachepath"};
         
     private Set<NihmsStatus> statusesToProcess;
 
@@ -80,6 +81,21 @@ public class NihmsTransformLoadApp {
                     + "using the \"nihms.config.filepath\" environment variable.", configFile.getAbsolutePath(), DEFAULT_CONFIG_FILENAME);
         }
 
+        if (LOG.isDebugEnabled()) {
+            StringBuilder props = new StringBuilder("\n"
+                        + "--------------------------------------------------------------\n"
+                        + "*                         PROPERTIES                         *\n"
+                        + "--------------------------------------------------------------\n");
+            
+            props.append(NIHMS_CONFIG_FILEPATH_PROPKEY + ": " + configFile.toString());
+            
+            for (String key : SYSTEM_PROPERTIES) {
+                props.append(key + ": " + ConfigUtil.getSystemProperty(key, "{uses_default}"));
+            }
+            props.append("--------------------------------------------------------------\n");
+            LOG.debug(props.toString());
+        }
+        
         NihmsTransformLoadService service = new NihmsTransformLoadService();
         service.transformAndLoadFiles(statusesToProcess);
         
