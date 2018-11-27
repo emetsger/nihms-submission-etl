@@ -57,13 +57,15 @@ public class NihmsTransformLoadService {
     public NihmsTransformLoadService() {
         nihmsPassClient = new NihmsPassClientService();
         pmidLookup = new PmidLookup();
+        statusService = new SubmissionStatusService();
         completedPubsCache = CompletedPublicationsCache.getInstance();
     }
 
     /**
      * Option to inject dependencies
-     * @param passClientService
-     * @param pmidLookup
+     * @param passClientService the NihmsPassClientService instance to use
+     * @param pmidLookup the PmidLookup instance to use
+     * @param statusService the SubmissionStatusService instance to use
      */
     public NihmsTransformLoadService(NihmsPassClientService passClientService, PmidLookup pmidLookup, 
                                      SubmissionStatusService statusService) {
