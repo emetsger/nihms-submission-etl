@@ -48,20 +48,6 @@
     <module>nihms-etl-util</module>
   </modules>
 
-  <profiles>
-    <profile>
-      <id>external</id>
-      <activation>
-        <property>
-          <name>external</name>
-        </property>
-      </activation>
-      <properties>
-        <scp.port>122</scp.port>
-      </properties>
-    </profile>
-  </profiles>
-
   <build>    
     <pluginManagement>
       <plugins>
@@ -242,74 +228,34 @@
       
     </dependencies>
   </dependencyManagement>
-  
-  <repositories>
-  
-    <repository>
-      <id>dc.public.releases</id>
-      <name>Data Conservancy Public Maven Repository (releases)</name>
-      <layout>default</layout>
-      <url>http://maven.dataconservancy.org/public/releases/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    
-    <repository>
-      <id>dc.public.snapshots</id>
-      <name>Data Conservancy Public Maven Repository (snapshots)</name>
-      <layout>default</layout>
-      <url>http://maven.dataconservancy.org/public/snapshots/</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-    
-    <repository>
-      <id>dc.private.releases</id>
-      <name>Data Conservancy Private Maven Repository (releases)</name>
-      <url>scp://maven.dataconservancy.org:${scp.port}/data/maven-dc/private/releases/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>dc.private.snapshots</id>
-      <name>Data Conservancy Private Maven Repository (snapshots)</name>
-      <url>scp://maven.dataconservancy.org:${scp.port}/data/maven-dc/private/snapshots/</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
 
   <distributionManagement>
+
     <repository>
-      <id>dc.public.releases</id>
-      <name>Data Conservancy Release Maven Repository</name>
-      <url>scp://maven.dataconservancy.org:${scp.port}/data/maven-dc/public/releases/</url>
+      <id>maven-central-staging</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
 
     <snapshotRepository>
-      <id>dc.public.snapshots</id>
-      <name>Data Conservancy Snapshot Maven Repository</name>
-      <url>scp://maven.dataconservancy.org:${scp.port}/data/maven-dc/public/snapshots/</url>
+      <id>maven-central-snapshots</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
       <uniqueVersion>false</uniqueVersion>
     </snapshotRepository>
 
-  </distributionManagement>  
+  </distributionManagement>
+
+  <repositories>
+    <repository>
+      <id>oss</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
   
   
 </project>
