@@ -44,8 +44,8 @@ public class UserPubSubmissionsCache {
     
     /**
      * Add an item to an existing Map Entry or create a new one if one does not already exist
-     * @param userIdPubId
-     * @param submissionId
+     * @param userIdPubId the concatenated user id and publication id
+     * @param submissionId the submission id
      */
     public synchronized void addToOrCreateEntry(String userIdPubId, URI submissionId) {
         Set<URI> submissionIds = userPubSubmissionsCache.get(userIdPubId);
@@ -59,8 +59,8 @@ public class UserPubSubmissionsCache {
     
     /**
      * Add userIdPubId/submissionIds combination to map
-     * @param userIdPubId
-     * @param submissionIds
+     * @param userIdPubId the concatenated user id and publication id
+     * @param submissionIds the submission ids
      */
     public synchronized void put(String userIdPubId, Set<URI> submissionIds) {
         userPubSubmissionsCache.put(userIdPubId, submissionIds);
@@ -68,8 +68,8 @@ public class UserPubSubmissionsCache {
     
     /**
      * Retrieve submissionIds by userIdPubId
-     * @param key
-     * @return
+     * @param userIdPubId the concatenated user id and publication id
+     * @return submission ids
      */
     public synchronized Set<URI> get(String userIdPubId) {
         return userPubSubmissionsCache.get(userIdPubId);
@@ -77,7 +77,7 @@ public class UserPubSubmissionsCache {
 
     /**
      * Remove a Submission from cache
-     * @param userIdPubId
+     * @param userIdPubId the concatenated user id and publication id
      */
     public synchronized void remove(String userIdPubId) {
         userPubSubmissionsCache.remove(userIdPubId);
@@ -85,7 +85,7 @@ public class UserPubSubmissionsCache {
 
     /**
      * Get number of cached submissions
-     * @return
+     * @return the size of the cache
      */
     public synchronized int size() {
         return userPubSubmissionsCache.size();

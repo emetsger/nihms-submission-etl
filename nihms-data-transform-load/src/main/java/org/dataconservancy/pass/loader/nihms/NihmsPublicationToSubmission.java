@@ -87,7 +87,6 @@ public class NihmsPublicationToSubmission {
     
     /**
      * Constructor uses defaults for client service and pmid lookup
-     * @param clientService
      */
     public NihmsPublicationToSubmission() {
         this.pmidLookup = new PmidLookup();
@@ -98,7 +97,8 @@ public class NihmsPublicationToSubmission {
     /**
      * Constructor initiates with the required NIHMS Client Service and PMID lookup
      * Useful to pass in an existing clientService to reuse cache 
-     * @param clientService
+     * @param clientService PASS client
+     * @param pmidLookup Entrez client
      */
     public NihmsPublicationToSubmission(NihmsPassClientService clientService, PmidLookup pmidLookup) {
         if (clientService==null) {
@@ -122,8 +122,8 @@ public class NihmsPublicationToSubmission {
     /**
      * Does the heavy lifting of converting a NihmsPublication record into the NihmsSubmissionDTO 
      * that is needed for the NihmsLoader to write it to Fedora
-     * @param pub
-     * @return
+     * @param pub the publication
+     * @return the DTO, never {@code null}
      */
     public SubmissionDTO transform(NihmsPublication pub) {
                 
@@ -200,9 +200,9 @@ public class NihmsPublicationToSubmission {
     /**
      * Ideally, uses the record from Entrez to populate publication details, but in the absence of that
      * this will create a publication with what we have in the NihmsPublication
-     * @param nihmsPub
-     * @param pmr
-     * @return
+     * @param nihmsPub the publication
+     * @param pmr the pubmed record
+     * @return the Publication, never {@code null}
      */
     private Publication initiateNewPublication(NihmsPublication nihmsPub, PubMedEntrezRecord pmr) {
         LOG.info("No existing publication found for PMID \"{}\", initiating new Publication record", nihmsPub.getPmid());
@@ -425,9 +425,9 @@ public class NihmsPublicationToSubmission {
      * what NIHMS says and log the fact as a warning. If this calc returns NULL, a repository copy should
      * not have been created 
      * 
-     * @param pub
-     * @param currDepositStatus
-     * @return
+     * @param pub the publication
+     * @param currCopyStatus current RepositoryCopy CopyStatus
+     * @return the new copy status, may be {@code null}
      */
     public static CopyStatus calcRepoCopyStatus(NihmsPublication pub, CopyStatus currCopyStatus) {
         if (pub.getNihmsStatus().equals(NihmsStatus.COMPLIANT)) {

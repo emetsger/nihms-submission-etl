@@ -65,8 +65,8 @@ public class CompletedPublicationsCache {
     
     /**
      * Add pmid/awardNumber combination to set
-     * @param pmid
-     * @param awardNumber
+     * @param pmid pub med id
+     * @param awardNumber award number
      */
     public synchronized void add(String pmid, String awardNumber) {
         if (!nullOrEmpty(pmid) && !nullOrEmpty(awardNumber) 
@@ -83,8 +83,9 @@ public class CompletedPublicationsCache {
     
     /**
      * Check if it contains pmid/award number combination
-     * @param key
-     * @return
+     * @param pmid pub med id
+     * @param awardNumber award number
+     * @return true if the id/award number combo is cached
      */
     public synchronized boolean contains(String pmid, String awardNumber) {
         if (!nullOrEmpty(pmid) && !nullOrEmpty(awardNumber)) {
@@ -96,7 +97,7 @@ public class CompletedPublicationsCache {
 
     /**
      * Get number of items in cache
-     * @return
+     * @return the size of the cache
      */
     public synchronized int size() {
         return completedPubsCache.size();

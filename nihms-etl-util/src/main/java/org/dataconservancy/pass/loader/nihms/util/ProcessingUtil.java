@@ -32,8 +32,8 @@ public class ProcessingUtil {
     
     /**
      * Returns true if a string is empty or null
-     * @param str
-     * @return
+     * @param str the string, may be {@code null}
+     * @return true if a string is empty or null
      */
     public static boolean nullOrEmpty(String str) {
         return (str==null || str.isEmpty());
@@ -41,8 +41,8 @@ public class ProcessingUtil {
 
     /** 
      * Returns true if a collection has 0 rows or is null
-     * @param collection
-     * @return
+     * @param collection the collection, may be {@code null}
+     * @return true if a collection has 0 rows or is null
      */
     public static boolean nullOrEmpty(Collection<?> collection) {
         return (collection==null || collection.isEmpty());
@@ -52,9 +52,9 @@ public class ProcessingUtil {
     /**
      * Formats a dateto a joda datetime according to pattern provided. If pattern is null, defaults to yyyy-MM-dd. 
      * Returns null if no date passed in
-     * @param date
+     * @param date a date
      * @param pattern e.g. MM/dd/yyyy
-     * @return
+     * @return the DateTime for the supplied {@code date}
      */
     public static DateTime formatDate(String date, String pattern) {
         if (nullOrEmpty(date)) {

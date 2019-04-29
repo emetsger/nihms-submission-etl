@@ -50,8 +50,8 @@ public class SubmissionLoader {
     
     /**
      * Supports initiation with specific client service
-     * @param clientService
-     * @param statusService
+     * @param clientService PASS client service
+     * @param statusService Submission status service
      */
     public SubmissionLoader(NihmsPassClientService clientService, SubmissionStatusService statusService) {
         this.clientService = clientService;
@@ -62,7 +62,7 @@ public class SubmissionLoader {
     /**
      * Load the data in the NihmsSubmissionDTO to the database. Deal with any conflicts that occur during the updates
      * by implementing retries, failing gracefully etc.
-     * @param dto
+     * @param dto the DTO
      */
     public void load(SubmissionDTO dto) {
         if (dto==null || dto.getSubmission()==null) {

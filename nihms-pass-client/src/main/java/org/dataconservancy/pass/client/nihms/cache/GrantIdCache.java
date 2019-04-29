@@ -41,8 +41,8 @@ public class GrantIdCache {
     
     /**
      * Add awardNumber/grantId combination to map
-     * @param awardNumber
-     * @param grantId
+     * @param awardNumber the award number
+     * @param grantId the grant id
      */
     public synchronized void put(String awardNumber, URI grantId) {
         awardNumber = awardNumber.toLowerCase();
@@ -51,8 +51,8 @@ public class GrantIdCache {
     
     /**
      * Retrieve grantId by awardNumber
-     * @param key
-     * @return
+     * @param awardNumber the award number
+     * @return the grant id
      */
     public synchronized URI get(String awardNumber) {
         awardNumber = awardNumber.toLowerCase();
@@ -61,7 +61,7 @@ public class GrantIdCache {
 
     /**
      * Remove a Grant from cache
-     * @param awardNumber
+     * @param awardNumber the award number
      */
     public synchronized void remove(String awardNumber) {
         awardNumber = awardNumber.toLowerCase();
@@ -70,7 +70,7 @@ public class GrantIdCache {
 
     /**
      * Get number of cached grants
-     * @return
+     * @return number of cached grants
      */
     public synchronized int size() {
         return grantCache.size();

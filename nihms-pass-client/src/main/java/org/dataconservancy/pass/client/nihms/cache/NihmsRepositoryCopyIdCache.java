@@ -42,8 +42,8 @@ public class NihmsRepositoryCopyIdCache {
     
     /**
      * Add publicationId to repositoryCopyId mapping 
-     * @param publicationId
-     * @param repositoryCopyId
+     * @param publicationId the publication id
+     * @param repositoryCopyId the repository copy it
      */
     public synchronized void put(URI publicationId, URI repositoryCopyId) {
         nihmsRepoCopyCache.put(publicationId, repositoryCopyId);
@@ -51,8 +51,8 @@ public class NihmsRepositoryCopyIdCache {
     
     /**
      * Retrieve RepositoryCopyId by publicationId
-     * @param publicationId
-     * @return
+     * @param publicationId the publication id
+     * @return the repository copy id
      */
     public synchronized URI get(URI publicationId) {
         return nihmsRepoCopyCache.get(publicationId);
@@ -60,7 +60,7 @@ public class NihmsRepositoryCopyIdCache {
 
     /**
      * Remove a publicationId to repositoryCopyId mapping from cache
-     * @param pmid
+     * @param publicationId the publication id
      */
     public synchronized void remove(URI publicationId) {
         nihmsRepoCopyCache.remove(publicationId);
@@ -68,7 +68,7 @@ public class NihmsRepositoryCopyIdCache {
 
     /**
      * Get number of cached mappings
-     * @return
+     * @return the cache size
      */
     public synchronized int size() {
         return nihmsRepoCopyCache.size();

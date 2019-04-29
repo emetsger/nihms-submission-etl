@@ -39,7 +39,7 @@ public class FileUtil {
     
     /**
      * Gets directory that the app was run from
-     * @return
+     * @return the current directory
      */
     public static String getCurrentDirectory() {
         try {
@@ -78,8 +78,8 @@ public class FileUtil {
     
     /**
      * Retrieve a list of files in a directory, filter by directory
-     * @param directory
-     * @return
+     * @param directory the directory
+     * @return the file listing
      */
     public static List<Path> getCsvFilePaths(Path directory) {
         List<Path> filepaths = null;
@@ -120,7 +120,7 @@ public class FileUtil {
 
     /**
      * Rename file to append ".done" once it has been processed
-     * @param path
+     * @param path the path to rename
      */
     public static void renameToDone(Path path) {
         final File file = path.toFile();
