@@ -91,6 +91,7 @@
     <maven-shade-plugin.version>3.1.0</maven-shade-plugin.version>
     <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     <maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
+    <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
   
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>4.12</junit.version>
@@ -221,6 +222,19 @@
               </goals>
             </execution>
           </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>${maven-release-plugin.version}</version>
+          <configuration>
+            <autoVersionSubmodules>true</autoVersionSubmodules>
+            <pushChanges>false</pushChanges>
+            <localCheckout>true</localCheckout>
+            <preparationGoals>clean install</preparationGoals>
+            <releaseProfiles>release</releaseProfiles>
+          </configuration>
         </plugin>
         
       </plugins>
