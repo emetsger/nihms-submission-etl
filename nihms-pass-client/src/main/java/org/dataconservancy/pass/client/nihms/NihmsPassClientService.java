@@ -54,17 +54,17 @@ public class NihmsPassClientService {
 
     private static final Logger LOG = LoggerFactory.getLogger(NihmsPassClientService.class);
 
-    private static final String ISSNS_FLD = "issns";
+    public static final String ISSNS_FLD = "issns";
 
-    private static final String SUBMISSION_FLD = "submission";
+    public static final String SUBMISSION_FLD = "submission";
 
-    private static final String REPOSITORY_FLD = "repository";
+    public static final String REPOSITORY_FLD = "repository";
 
-    private static final String AWARD_NUMBER_FLD = "awardNumber";
+    public static final String AWARD_NUMBER_FLD = "awardNumber";
 
-    private static final String PUBLICATION_FLD = "publication";
+    public static final String PUBLICATION_FLD = "publication";
 
-    private static final String SUBMITTER_FLD = "submitter";
+    public static final String SUBMITTER_FLD = "submitter";
 
     private PassClient client;
 
