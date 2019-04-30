@@ -46,7 +46,7 @@ public class PubMedEntrezRecord {
     /**
      * Instantiate a PubMedRecord by passing in a JSONObject representing a single result from the 
      * PubMed database of the Entrez API. The root of this record starts at the PMID if the results JSON. Here is a sample record:
-     * https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&rettype=full&id=27771272
+     * <a href="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&amp;retmode=json&amp;rettype=full&amp;id=27771272">https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&amp;retmode=json&amp;rettype=full&amp;id=27771272</a>
      * @param entrezJson JSONObject for single PubMed record from Entrez API.
      */
     public PubMedEntrezRecord(JSONObject entrezJson) {

@@ -41,8 +41,8 @@ public class PublicationIdCache {
     
     /**
      * Add publication to map
-     * @param key
-     * @param value
+     * @param pmid the pmid
+     * @param publicationId the publication id
      */
     public synchronized void put(String pmid, URI publicationId) {
         publicationCache.put(pmid, publicationId);
@@ -50,8 +50,8 @@ public class PublicationIdCache {
     
     /**
      * Retrieve publicationId by pmid
-     * @param key
-     * @return
+     * @param pmid the pmid
+     * @return the publication uri
      */
     public synchronized URI get(String pmid) {
         return publicationCache.get(pmid);
@@ -59,7 +59,7 @@ public class PublicationIdCache {
 
     /**
      * Remove a Publication from cache
-     * @param pmid
+     * @param pmid the pmid
      */
     public synchronized void remove(String pmid) {
         publicationCache.remove(pmid);
@@ -67,7 +67,7 @@ public class PublicationIdCache {
 
     /**
      * Get number of cached publications
-     * @return
+     * @return the size of the cache
      */
     public synchronized int size() {
         return publicationCache.size();

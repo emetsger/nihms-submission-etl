@@ -121,8 +121,8 @@ public class NihmsPassClientService {
     /**
      * Searches for Grant record using awardNumber. Tries this first using the awardNumber as passed in,
      * then again without spaces.
-     * @param awardNumber
-     * @return
+     * @param awardNumber the award number
+     * @return the grant, or {@code null} if not found
      */
     public Grant findMostRecentGrantByAwardNumber(String awardNumber) {
         if (nullOrEmpty(awardNumber)) {
@@ -169,9 +169,8 @@ public class NihmsPassClientService {
     /**
      * Looks up publication using PMID, since this is the most reliable field to match. Checks publication
      * cache first, then checks index
-     * @param pmid
-     * @param doi
-     * @return
+     * @param pmid the pub med id
+     * @return the publication, or {@code null} if it can't be found
      */
     public Publication findPublicationByPmid(String pmid) {
         if (pmid == null) {
@@ -198,9 +197,9 @@ public class NihmsPassClientService {
     /**
      * Looks up publication using DOI, call should include pmid so that it can check publication
      * cache first, then checks index for DOI
-     * @param pmid
-     * @param doi
-     * @return
+     * @param doi the digital object identifier
+     * @param pmid the pub med id
+     * @return the publication, or {@code null} if it can't be found
      */
     public Publication findPublicationByDoi(String doi, String pmid) {
         if (pmid == null) {
@@ -226,8 +225,8 @@ public class NihmsPassClientService {
 
     /**
      * Find NIHMS RepositoryCopy record for a publicationId
-     * @param pubId
-     * @return
+     * @param pubId the publication id
+     * @return the repository copy, or {@code null} if it can't be found
      */
     public RepositoryCopy findNihmsRepositoryCopyForPubId(URI pubId) {
         if (pubId == null) {
@@ -266,9 +265,9 @@ public class NihmsPassClientService {
     
     /**
      * Searches for Submissions matching a specific publication and User Id (Submission.submitter)
-     * @param pubId
-     * @param userId
-     * @return
+     * @param pubId the publication id
+     * @param userId the user id
+     * @return the submissions, may be empty but never {@code null}
      */
     public List<Submission> findSubmissionsByPublicationAndUserId(URI pubId, URI userId) {
         if (pubId == null) {
@@ -309,9 +308,9 @@ public class NihmsPassClientService {
     /**      
      * Searches for Publication record using articleIds. This detects whether we are dealing
      * with a record that was already looked at previously. 
-     * @param articleId
+     * @param articleId the artical id
      * @param idFieldName the name of the field on the Submission model that will be matched e.g. "pmid" or "doi"
-     * @return
+     * @return the publication, or {@code null} if it can't be found
      */
     private URI findPublicationByArticleId(String articleId, String idFieldName) {
         if (nullOrEmpty(articleId)) {
@@ -327,8 +326,8 @@ public class NihmsPassClientService {
     
     /**
      * Look up Journal URI using ISSN
-     * @param issn
-     * @return
+     * @param issn the issn
+     * @return the journal for the ISSN, may be {@code null} if not found
      */
     public URI findJournalByIssn(String issn) {
         if (nullOrEmpty(issn)) {
@@ -340,8 +339,8 @@ public class NihmsPassClientService {
     
     /**
      * Searches for a NIHMS Deposit that matches a SubmissionID
-     * @param submissionId
-     * @return
+     * @param submissionId the submission id
+     * @return the deposit associated with the submission, may be {@code null} if not found
      */
     public Deposit findNihmsDepositForSubmission(URI submissionId) {
         if (submissionId == null) {
@@ -377,7 +376,7 @@ public class NihmsPassClientService {
     
      /**
      * Retrieve full grant record from database
-     * @param grantId
+     * @param grantId the grant id
      * @return Grant if found, or null if not found
      */
     private Grant readGrant(URI grantId){
@@ -391,7 +390,7 @@ public class NihmsPassClientService {
     
     /**
      * Retrieve full publication record from database
-     * @param publicationId
+     * @param publicationId the publication id
      * @return Publication if found, or null if not found
      */
     public Publication readPublication(URI publicationId){
@@ -405,7 +404,7 @@ public class NihmsPassClientService {
     
     /**
      * Retrieve full Submission record
-     * @param submissionId
+     * @param submissionId the submission id
      * @return matching submission or null if none found
      */
     public Submission readSubmission(URI submissionId) {
@@ -419,8 +418,8 @@ public class NihmsPassClientService {
 
     /**
      * Retrieve full deposit record from database
-     * @param depositId
-     * @return
+     * @param depositId the deposit id
+     * @return the deposit, or null if not found
      */
     public Deposit readDeposit(URI depositId){
         if (depositId == null) {
@@ -432,8 +431,8 @@ public class NihmsPassClientService {
 
     
     /**
-     * @param publication
-     * @return
+     * @param publication the publication
+     * @return the uri of the created publication
      */
     public URI createPublication(Publication publication) {
         URI publicationId = client.createResource(publication);
@@ -445,8 +444,8 @@ public class NihmsPassClientService {
     
     
     /**
-     * @param submission
-     * @return
+     * @param submission the submission
+     * @return the uri of the created submission
      */
     public URI createSubmission(Submission submission) {
         URI submissionId = client.createResource(submission);
@@ -458,8 +457,8 @@ public class NihmsPassClientService {
     
 
     /**
-     * @param respositoryCopy
-     * @return
+     * @param repositoryCopy the repository copy
+     * @return the uri of the created repository copy
      */
     public URI createRepositoryCopy(RepositoryCopy repositoryCopy) {
         URI repositoryCopyId = client.createResource(repositoryCopy);
@@ -470,7 +469,7 @@ public class NihmsPassClientService {
 
     /**
      * 
-     * @param publication
+     * @param publication the publication
      * @return true if record needed to be updated, false if no update
      */
     public boolean updatePublication(Publication publication) {
@@ -485,7 +484,7 @@ public class NihmsPassClientService {
     
     
     /**
-     * @param submission
+     * @param submission the submission
      * @return true if record needed to be updated, false if no update
      */
     public boolean updateSubmission(Submission submission) {
@@ -505,7 +504,7 @@ public class NihmsPassClientService {
     
 
     /**
-     * @param repositoryCopy
+     * @param repositoryCopy the repository copy
      * @return true if record needed to be updated, false if no update
      */
     public boolean updateRepositoryCopy(RepositoryCopy repositoryCopy) {
@@ -519,7 +518,7 @@ public class NihmsPassClientService {
     }
     
     /**
-     * @param deposit
+     * @param deposit the deposit
      * @return true if record needed to be updated, false if no update
      */
     public boolean updateDeposit(Deposit deposit) {

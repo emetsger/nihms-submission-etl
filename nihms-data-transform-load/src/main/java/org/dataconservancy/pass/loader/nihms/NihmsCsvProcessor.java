@@ -112,7 +112,7 @@ public class NihmsCsvProcessor {
     /**
      * Cycles through the CSV that is loaded, converting to a NihmsPublication, and then
      * using the consumer provided to process the record
-     * @param pubConsumer
+     * @param pubConsumer the consumer
      */
     public void processCsv(Consumer<NihmsPublication> pubConsumer) {
         
@@ -141,8 +141,8 @@ public class NihmsCsvProcessor {
 
     /**
      * Converts Row to a NihmsPublication object and passes it the consumer provided
-     * @param row
-     * @param rowConsumer
+     * @param row the row
+     * @param pubConsumer the row consumer
      */
     private void consumeRow(CSVRecord row, Consumer<NihmsPublication> pubConsumer) {
         if (row==null) {return;}
@@ -168,8 +168,8 @@ public class NihmsCsvProcessor {
      * Validates that the headers in the spreadsheet match what is expected before retrieving data from them
      * This will go through all headers even if the first one is not valid so that all issues with headers are
      * logged as errors before exiting
-     * @param headers
-     * @return
+     * @param headers CSVRrecord headers
+     * @return true if the headers match the {@link #EXPECTED_HEADERS}
      */
     private boolean hasValidHeaders(CSVRecord headers) {
         boolean valid = true;
@@ -189,8 +189,9 @@ public class NihmsCsvProcessor {
     /**
      * Cycles through Submission status types, and matches it to the filepath to determine
      * the status of the rows in the CSV file. If no match is found, an exception is thrown.
-     * @param path
-     * @return
+     * @param path the file path
+     * @return the status
+     * @throws RuntimeException if the status could not be determined
      */
     public static NihmsStatus nihmsStatus(Path path) {
         String filename = path.getFileName().toString();

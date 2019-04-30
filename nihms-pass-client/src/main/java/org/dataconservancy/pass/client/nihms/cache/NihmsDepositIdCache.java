@@ -42,8 +42,8 @@ public class NihmsDepositIdCache {
     
     /**
      * Add deposit to map
-     * @param submission
-     * @param depositId
+     * @param submissionId the submission id
+     * @param depositId the deposit id
      */
     public synchronized void put(URI submissionId, URI depositId) {
         depositCache.put(submissionId, depositId);
@@ -51,8 +51,8 @@ public class NihmsDepositIdCache {
     
     /**
      * Retrieve depositId by submissionId
-     * @param key
-     * @return
+     * @param submissionId the submission id
+     * @return the URI from the deposit cache
      */
     public synchronized URI get(URI submissionId) {
         return depositCache.get(submissionId);
@@ -60,7 +60,7 @@ public class NihmsDepositIdCache {
 
     /**
      * Remove a Deposit from cache
-     * @param submission
+     * @param submissionId the submission id
      */
     public synchronized void remove(URI submissionId) {
         depositCache.remove(submissionId);
@@ -68,7 +68,7 @@ public class NihmsDepositIdCache {
 
     /**
      * Get number of cached deposits
-     * @return
+     * @return the number of cached deposits
      */
     public synchronized int size() {
         return depositCache.size();

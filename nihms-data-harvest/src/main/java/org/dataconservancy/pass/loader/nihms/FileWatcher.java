@@ -37,10 +37,10 @@ public class FileWatcher {
     
     /**
      * Polls a directory until it finds a file matching the criteria, passes back the file name.
-     * @param directoryPath
-     * @param matchPrefix
-     * @param matchFileExtension
-     * @return
+     * @param directory directory to poll
+     * @param matchPrefix the filename prefix
+     * @param matchFileExtension the filename extension
+     * @return the matching file
      */
     public static File getNewFile(Path directory, String matchPrefix, String matchFileExtension) {  
 

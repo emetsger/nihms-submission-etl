@@ -101,10 +101,6 @@ public class NihmsHarvester {
     
     /**
      * Initiate harvester with required properties
-     * 
-     * @param downloadDirectoryPath
-     * @param nihmsUser
-     * @param nihmsPasswrd
      */
     public NihmsHarvester() {
         this.downloadDirectoryPath = FileUtil.getDataDirectory().toPath();
@@ -257,9 +253,9 @@ public class NihmsHarvester {
     
     /**
      * Waits for page to load, checks URL matches expected URL. Throws error if times out
-     * @param loadingUrl
-     * @param driver
-     * @throws InterruptedException
+     * @param loadingUrl the url
+     * @param driver the driver
+     * @throws InterruptedException if the current thread is interrupted
      */
     private void waitForPageToLoad(String loadingUrl, WebDriver driver) throws InterruptedException {
         long start_time = System.currentTimeMillis();

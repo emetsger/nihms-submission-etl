@@ -70,8 +70,8 @@ public class PmidLookup {
 
     /**
      * Retrieve PubMedRecord object for PMID record from NIH's Entrez API service. 
-     * @param pmid
-     * @return
+     * @param pmid pub med id
+     * @return the record
      */
     public PubMedEntrezRecord retrievePubMedRecord(String pmid) {
         JSONObject jsonObj = retrievePubMedRecordAsJson(pmid);
@@ -85,8 +85,8 @@ public class PmidLookup {
      * or null if no match found. Note that "no match found" means there is no record for that pmid, whereas
      * a RuntimeException means communication with the service failed, and the client app can decide what 
      * to do about those.
-     * @param pmid
-     * @return
+     * @param pmid pub med id
+     * @return the record as a JSON object
      */
     public JSONObject retrievePubMedRecordAsJson(String pmid) {
         if (pmid == null) {
@@ -111,8 +111,8 @@ public class PmidLookup {
     
     /**
      * Calls the Entrez API and finds the root of the JSON record
-     * @param pmid
-     * @return
+     * @param pmid pub med id
+     * @return the root JSON record
      */
     private JSONObject retrieveJsonFromApi(String pmid) {
         JSONObject root = null;
@@ -156,9 +156,9 @@ public class PmidLookup {
      * Converts to JSONObject then walks to the root of the JSON content. This could be a PMID record
      * or an error message
      * @param jsonEntrezRecord as string
-     * @param pmid
-     * @return
-     * @throws IOException
+     * @param pmid pub med id
+     * @return the root JSON object
+     * @throws IOException if there's an error reading the record
      */
     private JSONObject walkToJsonRoot(String jsonEntrezRecord, String pmid) throws IOException {
         JSONObject root = new JSONObject(jsonEntrezRecord);

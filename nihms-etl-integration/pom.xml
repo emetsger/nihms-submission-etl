@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.dataconservancy.pass</groupId>
     <artifactId>pass-nihms-submission-etl</artifactId>
-    <version>1.3.0</version>
+    <version>1.3.1-SNAPSHOT</version>
   </parent>
   <artifactId>nihms-etl-integration</artifactId>
+  <version>1.3.1-SNAPSHOT</version>
   <name>NIHMS ELT Integration Tests</name>
 
   <profiles>
@@ -29,8 +29,8 @@
     </profile>
   </profiles>
   <properties>
-    <FCREPO_HOST>localhost</FCREPO_HOST>
-    <ES_HOST>localhost</ES_HOST>
+    <FCREPO_HOST>${docker.host.address}</FCREPO_HOST>
+    <ES_HOST>${docker.host.address}</ES_HOST>
   </properties>
 
   <build>
@@ -70,7 +70,7 @@
                 <hostname>fcrepo</hostname>
                 <namingStrategy>alias</namingStrategy>
                 <env>
-                  <FCREPO_HOST>${FCREPO_HOST}</FCREPO_HOST>
+                  <FCREPO_HOST>fcrepo</FCREPO_HOST>
                   <FCREPO_PORT>${FCREPO_PORT}</FCREPO_PORT>
                   <FCREPO_JMS_PORT>${FCREPO_JMS_PORT}</FCREPO_JMS_PORT>
                   <FCREPO_STOMP_PORT>${FCREPO_STOMP_PORT}</FCREPO_STOMP_PORT>
@@ -102,19 +102,20 @@
             </image>
             <image>
               <alias>indexer</alias>
-              <name>oapass/indexer:0.0.17-3.2-SNAPSHOT</name>
+              <name>oapass/indexer@sha256:e51092a9d433219d52207f1ec3f5ea7c652d51f516bcbe9434dae556b921546d</name>
               <run>
                 <namingStrategy>alias</namingStrategy>
                 <env>
                   <PI_FEDORA_USER>fedoraAdmin</PI_FEDORA_USER>
                   <PI_FEDORA_PASS>moo</PI_FEDORA_PASS>
-                  <PI_FEDORA_INTERNAL_BASE>http://${FCREPO_HOST}:${FCREPO_PORT}/fcrepo/rest/</PI_FEDORA_INTERNAL_BASE>
+                  <PI_FEDORA_INTERNAL_BASE>http://fcrepo:${FCREPO_PORT}/fcrepo/rest/</PI_FEDORA_INTERNAL_BASE>
                   <PI_ES_BASE>http://elasticsearch:9200/</PI_ES_BASE>
                   <PI_ES_INDEX>http://elasticsearch:9200/pass/</PI_ES_INDEX>
-                  <PI_FEDORA_JMS_BROKER>tcp://${FCREPO_HOST}:${FCREPO_JMS_PORT}</PI_FEDORA_JMS_BROKER>
+                  <PI_FEDORA_JMS_BROKER>tcp://fcrepo:${FCREPO_JMS_PORT}</PI_FEDORA_JMS_BROKER>
                   <PI_FEDORA_JMS_QUEUE>fedora</PI_FEDORA_JMS_QUEUE>
                   <PI_TYPE_PREFIX>http://oapass.org/ns/pass#</PI_TYPE_PREFIX>
                   <PI_LOG_LEVEL>debug</PI_LOG_LEVEL>
+                  <PI_ES_CONFIG>/app/esconfig-3.4.json</PI_ES_CONFIG>
                 </env>
                 <links>
                   <link>fcrepo:localhost</link>
