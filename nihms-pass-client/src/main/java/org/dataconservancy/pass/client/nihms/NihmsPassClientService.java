@@ -53,9 +53,19 @@ import static org.dataconservancy.pass.loader.nihms.util.ProcessingUtil.nullOrEm
 public class NihmsPassClientService {
 
     private static final Logger LOG = LoggerFactory.getLogger(NihmsPassClientService.class);
-    
-    private String AWARD_NUMBER_FLD = "awardNumber";
-    
+
+    public static final String ISSNS_FLD = "issns";
+
+    public static final String SUBMISSION_FLD = "submission";
+
+    public static final String REPOSITORY_FLD = "repository";
+
+    public static final String AWARD_NUMBER_FLD = "awardNumber";
+
+    public static final String PUBLICATION_FLD = "publication";
+
+    public static final String SUBMITTER_FLD = "submitter";
+
     private PassClient client;
 
     /**
@@ -88,7 +98,7 @@ public class NihmsPassClientService {
      * Store NIHMS REPO ID setting
      */
     private URI nihmsRepoId;
-    
+
     public NihmsPassClientService() {
         this(PassClientFactory.getPassClient());
     }
@@ -238,8 +248,8 @@ public class NihmsPassClientService {
 
         if (repoCopyId==null) {
             Map<String,Object> attribs = new HashMap<String,Object>();
-            attribs.put("publication", pubId);
-            attribs.put("repository", nihmsRepoId);
+            attribs.put(PUBLICATION_FLD, pubId);
+            attribs.put(REPOSITORY_FLD, nihmsRepoId);
             
             Set<URI> repositoryCopies = client.findAllByAttributes(RepositoryCopy.class, attribs);
             if (nullOrEmpty(repositoryCopies)) {
@@ -282,8 +292,8 @@ public class NihmsPassClientService {
         List<Submission> submissions = new ArrayList<Submission>();
         
         Map<String,Object> attribs = new HashMap<String,Object>();
-        attribs.put("publication", pubId);
-        attribs.put("submitter", userId);
+        attribs.put(PUBLICATION_FLD, pubId);
+        attribs.put(SUBMITTER_FLD, userId);
         
         Set<URI> uris = client.findAllByAttributes(Submission.class, attribs);
         
@@ -333,7 +343,7 @@ public class NihmsPassClientService {
         if (nullOrEmpty(issn)) {
             return null;      
         }
-        return client.findByAttribute(Journal.class, "issn", issn);
+        return client.findByAttribute(Journal.class, ISSNS_FLD, issn);
     }
 
     
@@ -353,8 +363,8 @@ public class NihmsPassClientService {
         if (depositId==null) {
             //search for deposit
             Map<String,Object> attribs = new HashMap<String,Object>();
-            attribs.put("submission", submissionId);
-            attribs.put("repository", nihmsRepoId);        
+            attribs.put(SUBMISSION_FLD, submissionId);
+            attribs.put(REPOSITORY_FLD, nihmsRepoId);
             Set<URI> matches = client.findAllByAttributes(Deposit.class, attribs);
             if (matches!=null && matches.size()==1) {
                 depositId = matches.iterator().next();
