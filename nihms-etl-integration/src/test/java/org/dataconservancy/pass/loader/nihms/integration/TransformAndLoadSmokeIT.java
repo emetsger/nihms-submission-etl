@@ -62,12 +62,16 @@ public class TransformAndLoadSmokeIT extends NihmsSubmissionEtlITBase {
             final Set<URI> repoCopies = client.findAllByAttribute(RepositoryCopy.class, "@type", "RepositoryCopy");
             assertEquals(26, repoCopies.size());
         });
-        
-        Set<URI> publications = client.findAllByAttribute(Publication.class, "@type", "Publication");
-        assertEquals(37, publications.size());
-        
-        Set<URI> submissions = client.findAllByAttribute(Submission.class, "@type", "Submission");
-        assertEquals(45, submissions.size());
+
+        attempt(RETRIES, () -> {
+            Set<URI> publications = client.findAllByAttribute(Publication.class, "@type", "Publication");
+            assertEquals(37, publications.size());
+        });
+
+        attempt(RETRIES, () -> {
+            Set<URI> submissions = client.findAllByAttribute(Submission.class, "@type", "Submission");
+            assertEquals(45, submissions.size());
+        });
         
         //reset file names:
         File downloadDir = new File(path);
