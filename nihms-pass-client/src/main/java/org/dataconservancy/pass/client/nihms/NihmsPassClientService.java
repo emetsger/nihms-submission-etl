@@ -66,6 +66,9 @@ public class NihmsPassClientService {
 
     public static final String SUBMITTER_FLD = "submitter";
 
+    static final String ERR_CREATE_PUBLICATION =
+            "Refusing to create a Publication: it must have either a DOI or a PMID.";
+
     private PassClient client;
 
     /**
@@ -445,6 +448,12 @@ public class NihmsPassClientService {
      * @return the uri of the created publication
      */
     public URI createPublication(Publication publication) {
+
+        // Publication resource must have either a PMID or a DOI
+        if (publication.getPmid() == null && publication.getDoi() == null) {
+                throw new RuntimeException(ERR_CREATE_PUBLICATION);
+        }
+
         URI publicationId = client.createResource(publication);
         LOG.info("New Publication created with URI {}", publicationId);   
         //add to local cache for faster lookup
