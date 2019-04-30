@@ -215,13 +215,6 @@ public class NihmsPublicationToSubmission {
             publication.setDoi(pmr.getDoi());
             publication.setVolume(pmr.getVolume());
             publication.setIssue(pmr.getIssue());
-            
-            URI journalUri = clientService.findJournalByIssn(pmr.getIssn());
-            if (journalUri == null) {
-                //try ESSN
-                journalUri = clientService.findJournalByIssn(pmr.getEssn());
-            }
-            publication.setJournal(journalUri);
         } else {
             publication.setTitle(nihmsPub.getArticleTitle());
         }

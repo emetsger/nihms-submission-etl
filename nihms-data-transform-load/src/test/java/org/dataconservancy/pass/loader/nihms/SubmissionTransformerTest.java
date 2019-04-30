@@ -292,7 +292,6 @@ public class SubmissionTransformerTest {
         assertEquals(issue, dto.getPublication().getIssue());
         assertEquals(pmid, dto.getPublication().getPmid());
         assertEquals(doi, dto.getPublication().getDoi());
-        assertEquals(sJournalUri, dto.getPublication().getJournal().toString());   
         
         assertEquals(sGrantUri, dto.getSubmission().getGrants().get(0).toString());
         assertEquals(Source.OTHER, dto.getSubmission().getSource());  
