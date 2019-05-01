@@ -8,7 +8,7 @@
   <packaging>pom</packaging>
 
   <name>PASS NIHMS Submission Extract-Transform-Load</name>
-
+  <description>NIHMS ETL</description>
   <url>https://github.com/OA-PASS/nihms-submission-etl</url>
 
   <licenses>
