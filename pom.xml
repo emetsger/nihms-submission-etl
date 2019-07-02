@@ -105,6 +105,8 @@
     <selenium.version>3.11.0</selenium.version>
     <args4j.version>2.33</args4j.version>
     <mockito.version>1.9.5</mockito.version>
+    <handy-uri-templates.version>2.1.8</handy-uri-templates.version>
+    <commons-io.version>2.6</commons-io.version>
   </properties>
   
   <modules>
@@ -358,7 +360,19 @@
         <version>${logback.version}</version>
         <scope>test</scope>
       </dependency>
-      
+
+      <dependency>
+        <groupId>com.damnhandy</groupId>
+        <artifactId>handy-uri-templates</artifactId>
+        <version>${handy-uri-templates.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${commons-io.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 

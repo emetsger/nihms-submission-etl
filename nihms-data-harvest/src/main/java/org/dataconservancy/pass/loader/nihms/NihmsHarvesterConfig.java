@@ -16,7 +16,9 @@
 package org.dataconservancy.pass.loader.nihms;
 
 import org.dataconservancy.pass.loader.nihms.util.ConfigUtil;
-import org.dataconservancy.pass.loader.nihms.util.FileUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Holds information and methods required to configure the NIHMS harvester tool.
@@ -24,38 +26,47 @@ import org.dataconservancy.pass.loader.nihms.util.FileUtil;
  */
 public class NihmsHarvesterConfig {
 
-    private static final String USERNAME_KEY = "nihmsetl.harvester.username";
-    
-    private static final String PASSWRD_KEY = "nihmsetl.harvester.password";
-    
-    private static final String GECKO_PATH_KEY = "webdriver.gecko.driver";
-    
-    private static final String GECKODRIVER_DEFAULTNAME = "geckodriver.exe";
-    
-    /**
-     * Retrieve the user name from a system property, or use default
-     * @return user name
-     */
-    public static String getUserName() {
-        String username = ConfigUtil.getSystemProperty(USERNAME_KEY, null);
-        return username;
+    private static final String API_HOST_KEY = "nihmsetl.api.host";
+
+    private static final String DEFAULT_API_HOST = "www.nci.nlm.nih.gov";
+
+    private static final String API_SCHEME_KEY = "nihmsetl.api.scheme";
+
+    private static final String DEFAULT_API_SCHEME = "https";
+
+    private static final String API_PATH_KEY = "nihmsetl.api.path";
+
+    private static final String DEFAULT_API_PATH = "/pmc/utils/pacm/";
+
+    static final String API_URL_PARAM_PREFIX = "nihmsetl.api.url.param.";
+
+    private static final String HTTP_READ_TIMEOUT_KEY = "nihmsetl.http.read-timeout-ms";
+
+    private static final String DEFAULT_HTTP_READ_TIMEOUT = "10000";
+
+    private static final String HTTP_CONNECT_TIMEOUT_KEY = "nihmsetl.http.connect-timeout-ms";
+
+    private static final String DEFAULT_HTTP_CONNECT_TIMEOUT = "10000";
+
+    public static String getApiHost() {
+        return ConfigUtil.getSystemProperty(API_HOST_KEY, DEFAULT_API_HOST);
     }
 
-    /**
-     * Retrieve the password from a system property, or use default
-     * @return user name
-     */
-    public static String getPassword() {
-        String password = ConfigUtil.getSystemProperty(PASSWRD_KEY, null);
-        return password;
+    public static String getApiScheme() {
+        return ConfigUtil.getSystemProperty(API_SCHEME_KEY, DEFAULT_API_SCHEME);
     }
 
-    /**
-     * Retrieve the gecko driver path from a system property, or use current directory
-     * @return user name
-     */
-    public static String getGeckoDriverPath() {
-        String geckoDriverPath = ConfigUtil.getSystemProperty(GECKO_PATH_KEY, FileUtil.getCurrentDirectory() + "/" + GECKODRIVER_DEFAULTNAME);
-        return geckoDriverPath;
+    public static String getApiPath() {
+        return ConfigUtil.getSystemProperty(API_PATH_KEY, DEFAULT_API_PATH);
+    }
+
+    public static Map<String, String> getApiUrlParams() {
+        return System.getProperties()
+                .entrySet()
+                .stream()
+                .filter((entry) -> ((String)entry.getKey()).startsWith(API_URL_PARAM_PREFIX))
+                .collect(HashMap::new,
+                        (map, entry) -> map.put(((String)entry.getKey()).substring(API_URL_PARAM_PREFIX.length()), (String)entry.getValue()),
+                        (map1, map2) -> map2.putAll(map1));
     }
 }
