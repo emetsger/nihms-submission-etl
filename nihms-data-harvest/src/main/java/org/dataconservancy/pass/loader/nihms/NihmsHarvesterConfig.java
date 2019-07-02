@@ -26,25 +26,27 @@ import java.util.Map;
  */
 public class NihmsHarvesterConfig {
 
-    private static final String API_HOST_KEY = "nihmsetl.api.host";
+    public static final String NIHMS_ETL_PROPERTY_PREFIX = "nihmsetl.";
 
-    private static final String DEFAULT_API_HOST = "www.nci.nlm.nih.gov";
+    private static final String API_HOST_KEY = NIHMS_ETL_PROPERTY_PREFIX + "api.host";
 
-    private static final String API_SCHEME_KEY = "nihmsetl.api.scheme";
+    private static final String DEFAULT_API_HOST = "www.ncbi.nlm.nih.gov";
+
+    private static final String API_SCHEME_KEY = NIHMS_ETL_PROPERTY_PREFIX + "api.scheme";
 
     private static final String DEFAULT_API_SCHEME = "https";
 
-    private static final String API_PATH_KEY = "nihmsetl.api.path";
+    private static final String API_PATH_KEY = NIHMS_ETL_PROPERTY_PREFIX + "api.path";
 
     private static final String DEFAULT_API_PATH = "/pmc/utils/pacm/";
 
-    static final String API_URL_PARAM_PREFIX = "nihmsetl.api.url.param.";
+    static final String API_URL_PARAM_PREFIX = NIHMS_ETL_PROPERTY_PREFIX + "api.url.param.";
 
-    private static final String HTTP_READ_TIMEOUT_KEY = "nihmsetl.http.read-timeout-ms";
+    private static final String HTTP_READ_TIMEOUT_KEY = NIHMS_ETL_PROPERTY_PREFIX + "http.read-timeout-ms";
 
     private static final String DEFAULT_HTTP_READ_TIMEOUT = "10000";
 
-    private static final String HTTP_CONNECT_TIMEOUT_KEY = "nihmsetl.http.connect-timeout-ms";
+    private static final String HTTP_CONNECT_TIMEOUT_KEY = NIHMS_ETL_PROPERTY_PREFIX + "http.connect-timeout-ms";
 
     private static final String DEFAULT_HTTP_CONNECT_TIMEOUT = "10000";
 
@@ -68,5 +70,13 @@ public class NihmsHarvesterConfig {
                 .collect(HashMap::new,
                         (map, entry) -> map.put(((String)entry.getKey()).substring(API_URL_PARAM_PREFIX.length()), (String)entry.getValue()),
                         (map1, map2) -> map2.putAll(map1));
+    }
+
+    public static long getHttpConnectTimeoutMs() {
+        return Long.valueOf(ConfigUtil.getSystemProperty(HTTP_CONNECT_TIMEOUT_KEY, DEFAULT_HTTP_CONNECT_TIMEOUT));
+    }
+
+    public static long getHttpReadTimeoutMs() {
+        return Long.valueOf(ConfigUtil.getSystemProperty(HTTP_READ_TIMEOUT_KEY, DEFAULT_HTTP_READ_TIMEOUT));
     }
 }

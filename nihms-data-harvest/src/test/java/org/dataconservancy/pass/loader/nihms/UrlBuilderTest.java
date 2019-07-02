@@ -19,6 +19,7 @@
 package org.dataconservancy.pass.loader.nihms;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,10 +29,12 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static java.lang.String.join;
+import static org.dataconservancy.pass.loader.nihms.NihmsHarvesterConfig.API_URL_PARAM_PREFIX;
 import static org.junit.Assert.*;
 
 public class UrlBuilderTest {
@@ -56,13 +59,13 @@ public class UrlBuilderTest {
         nihmsetl.api.url.param.pdt = 07/2019
          */
 
-        System.setProperty(join("", NihmsHarvesterConfig.API_URL_PARAM_PREFIX, "filter"), "");
-        System.setProperty(join("", NihmsHarvesterConfig.API_URL_PARAM_PREFIX, "format"), "csv");
-        System.setProperty(join("", NihmsHarvesterConfig.API_URL_PARAM_PREFIX, "inst"), "JOHNS HOPKINS");
-        System.setProperty(join("", NihmsHarvesterConfig.API_URL_PARAM_PREFIX, "ipf"), "4134401");
-        System.setProperty(join("", NihmsHarvesterConfig.API_URL_PARAM_PREFIX, "rd"), "07/02/2019");
-        System.setProperty(join("", NihmsHarvesterConfig.API_URL_PARAM_PREFIX, "pdf"), "07/2018");
-        System.setProperty(join("", NihmsHarvesterConfig.API_URL_PARAM_PREFIX, "pdt"), "07/2019");
+        System.setProperty(join("", API_URL_PARAM_PREFIX, "filter"), "");
+        System.setProperty(join("", API_URL_PARAM_PREFIX, "format"), "csv");
+        System.setProperty(join("", API_URL_PARAM_PREFIX, "inst"), "JOHNS HOPKINS");
+        System.setProperty(join("", API_URL_PARAM_PREFIX, "ipf"), "4134401");
+        System.setProperty(join("", API_URL_PARAM_PREFIX, "rd"), "07/02/2019");
+        System.setProperty(join("", API_URL_PARAM_PREFIX, "pdf"), "07/2018");
+        System.setProperty(join("", API_URL_PARAM_PREFIX, "pdt"), "07/2019");
 
         assertEquals("", NihmsHarvesterConfig.getApiUrlParams().get("filter"));
         assertEquals("csv", NihmsHarvesterConfig.getApiUrlParams().get("format"));
@@ -71,6 +74,16 @@ public class UrlBuilderTest {
         assertEquals("07/02/2019", NihmsHarvesterConfig.getApiUrlParams().get("rd"));
         assertEquals("07/2018", NihmsHarvesterConfig.getApiUrlParams().get("pdf"));
         assertEquals("07/2019", NihmsHarvesterConfig.getApiUrlParams().get("pdt"));
+    }
+
+    @AfterClass
+    public static void cleanUpSystemProps() {
+        System.getProperties()
+                .entrySet()
+                .stream()
+                .filter((entry) -> ((String)entry.getKey()).startsWith(API_URL_PARAM_PREFIX))
+                .collect(Collectors.toSet())
+                .forEach(entry -> System.clearProperty((String)entry.getKey()));
     }
 
     @Before
@@ -136,11 +149,7 @@ public class UrlBuilderTest {
                     }
             }
         });
-
-
     }
-
-
 
     @After
     public void tearDown() throws Exception {
