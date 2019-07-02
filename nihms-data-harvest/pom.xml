@@ -38,7 +38,17 @@
       <artifactId>nihms-etl-model</artifactId>
 	  <version>${project.parent.version}</version>
     </dependency>
-        
+
+    <dependency>
+      <groupId>com.damnhandy</groupId>
+      <artifactId>handy-uri-templates</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
