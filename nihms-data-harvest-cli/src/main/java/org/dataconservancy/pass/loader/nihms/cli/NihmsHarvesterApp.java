@@ -19,7 +19,6 @@ import java.io.File;
 
 import java.nio.file.Files;
 
-import java.util.Properties;
 import java.util.Set;
 
 import org.dataconservancy.pass.loader.nihms.NihmsHarvester;
@@ -29,6 +28,9 @@ import org.dataconservancy.pass.loader.nihms.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static java.util.Objects.nonNull;
+import static org.dataconservancy.pass.loader.nihms.NihmsHarvesterConfig.NIHMS_ETL_PROPERTY_PREFIX;
+
 /**
  * Coordinates loading of csv files and passing into load and transform routine
  * @author Karen Hanson
@@ -36,12 +38,6 @@ import org.slf4j.LoggerFactory;
 public class NihmsHarvesterApp {
 
     private static Logger LOG = LoggerFactory.getLogger(NihmsHarvesterApp.class);
-
-    /**
-     * These are the only system properties that can be loaded in from the properties file.
-     * Existing values will not be overwritten, these will just be added if missing.
-     */
-    private static final String[] SYSTEM_PROPERTIES = {"nihmsetl.harvester.username", "nihmsetl.harvester.password", "nihmsetl.data.dir", "webdriver.gecko.driver"};
     
     private static final String NIHMS_CONFIG_FILEPATH_PROPKEY = "nihmsetl.harvester.configfile";
     private static final String DEFAULT_CONFIG_FILENAME = "nihms-harvest.properties";
@@ -71,15 +67,17 @@ public class NihmsHarvesterApp {
         
         if (Files.exists(configFile.toPath()) && configFile.canRead()) {
             LOG.info("Config file found at path {}, loading in properties", configFile.getAbsolutePath());
-            Properties properties = ConfigUtil.loadProperties(configFile);
             //other properties should be system properties, per java-fedora-client needs.
             //add new system properties if we have any
-            for (String key : SYSTEM_PROPERTIES) {
-                String value = properties.getProperty(key);
-                if (value != null) {
-                    System.setProperty(key, value);
-                }
-            }
+            ConfigUtil.loadProperties(configFile)
+                    .entrySet()
+                    .stream()
+                    .filter(entry -> ((String)entry.getKey()).startsWith(NIHMS_ETL_PROPERTY_PREFIX))
+                    .filter(entry -> nonNull(entry.getValue()))
+                    .forEach(entry -> {
+                        LOG.debug("Setting property '{}' = '{}'", entry.getKey(), entry.getValue());
+                        System.setProperty((String)entry.getKey(), (String)entry.getValue());
+                    });
         } else {
             LOG.warn("Could not find a readable config file at path {}, will use current system and environment variables for configuration. "
                     + "To use a config file, create a file named \"{}\" in the app's folder or provide a valid path "
@@ -92,11 +90,18 @@ public class NihmsHarvesterApp {
                         + "*                         PROPERTIES                         *\n"
                         + "--------------------------------------------------------------\n");
             
-            props.append(NIHMS_CONFIG_FILEPATH_PROPKEY + ": " + configFile.toString());
-            
-            for (String key : SYSTEM_PROPERTIES) {
-                props.append(key + ": " + ConfigUtil.getSystemProperty(key, "{uses_default}"));
-            }
+            props.append(String.format("  %s: %s\n", NIHMS_CONFIG_FILEPATH_PROPKEY, configFile.toString()));
+
+            ConfigUtil.loadProperties(configFile)
+                    .entrySet()
+                    .stream()
+                    .filter(entry -> ((String)entry.getKey()).startsWith(NIHMS_ETL_PROPERTY_PREFIX))
+                    .filter(entry -> nonNull(entry.getValue()))
+                    .forEach(entry -> {
+                        props.append(String.format("  %s: %s\n",
+                                entry.getKey(), ConfigUtil.getSystemProperty((String)entry.getKey(), "{uses_default}")));
+                    });
+
             props.append("--------------------------------------------------------------\n");
             LOG.debug(props.toString());
         }

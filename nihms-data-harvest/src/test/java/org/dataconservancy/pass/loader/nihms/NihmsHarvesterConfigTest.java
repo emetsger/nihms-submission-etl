@@ -18,14 +18,27 @@
 
 package org.dataconservancy.pass.loader.nihms;
 
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import static org.dataconservancy.pass.loader.nihms.NihmsHarvesterConfig.API_URL_PARAM_PREFIX;
 import static org.junit.Assert.*;
 
 public class NihmsHarvesterConfigTest {
+
+    @AfterClass
+    public static void cleanUpSystemProps() {
+        System.getProperties()
+                .entrySet()
+                .stream()
+                .filter((entry) -> ((String)entry.getKey()).startsWith(API_URL_PARAM_PREFIX))
+                .collect(Collectors.toSet())
+                .forEach(entry -> System.clearProperty((String)entry.getKey()));
+    }
 
     /**
      * Insures that the {@link NihmsHarvesterConfig#getApiUrlParams()} properly processes the system properties prefixed by {@code nihmsetl.api.url.param.}
