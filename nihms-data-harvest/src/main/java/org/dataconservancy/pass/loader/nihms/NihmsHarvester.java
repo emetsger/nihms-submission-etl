@@ -94,7 +94,7 @@ public class NihmsHarvester {
             throw new RuntimeException("statusesToDownload list cannot be empty");
         }
         if (!validStartDate(startDate)) {
-            throw new RuntimeException(String.format("The startDate %s is not valid. The date must be formatted as yyyy-mm", startDate));
+            throw new RuntimeException(String.format("The startDate %s is not valid. The date must be formatted as mm-yyyy", startDate));
         }
 
         try {
