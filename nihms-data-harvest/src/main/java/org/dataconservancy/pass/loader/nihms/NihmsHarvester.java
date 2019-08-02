@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.dataconservancy.pass.loader.nihms.model.NihmsStatus;
 import org.dataconservancy.pass.loader.nihms.util.FileUtil;
@@ -71,9 +72,11 @@ public class NihmsHarvester {
         //if download directory doesn't already exist attempt to make it
         if (!Files.isDirectory(downloadDirectoryPath)) {
             LOG.warn("Download directory does not exist at path provided. A new directory will be created at path: {}", downloadDirectoryPath);
-            if (!downloadDirectoryPath.toFile().mkdir()) {
-                //could not be created.
-                throw new RuntimeException("A new download directory could not be created at path: {}. Please provide a valid path for the downloads");
+            try {
+                FileUtils.forceMkdir(downloadDirectoryPath.toFile());
+            } catch (IOException e) {
+                throw new RuntimeException("A new download directory could not be created at path: " +
+                        downloadDirectoryPath + ". Please provide a valid path for the downloads", e);
             }
         }
 
