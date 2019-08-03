@@ -96,7 +96,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>4.12</junit.version>
     <http-client.version>4.5.2</http-client.version>
-    <commons-io.version>1.3.2</commons-io.version>
     <org-json.version>20180130</org-json.version>
     <commons-csv.version>1.5</commons-csv.version>
     <slf4j.version>1.7.25</slf4j.version>
@@ -360,12 +359,6 @@
         <groupId>com.squareup.okhttp3</groupId>
         <artifactId>okhttp</artifactId>
         <version>${okhttp.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>commons-io</groupId>
-        <artifactId>commons-io</artifactId>
-        <version>${commons-io.version}</version>
       </dependency>
 
     </dependencies>
