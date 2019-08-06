@@ -114,6 +114,7 @@
     <module>nihms-data-harvest-cli</module>
     <module>nihms-data-transform-load</module>
     <module>nihms-data-transform-load-cli</module>
+    <module>nihms-data-analysis</module>
     <module>entrez-pmid-lookup</module>
     <module>nihms-pass-client</module>
     <module>nihms-etl-integration</module>
